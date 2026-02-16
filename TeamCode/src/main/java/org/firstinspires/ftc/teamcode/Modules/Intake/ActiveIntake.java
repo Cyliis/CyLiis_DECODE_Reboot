@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Robot.Hardware;
 public class ActiveIntake {
 
 
-    public static double intakePower = 1, reversePower = -0.8, transferPower = 0.3;
+    public static double intakePower = 1, reversePower = -0.8, transferPower = 0.2;
     public static boolean motorReversed=true;
 
     CRServo motor;

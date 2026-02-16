@@ -59,10 +59,10 @@ public class Odo {
 
     public static double getX()
     {
-        return x;
+        return predictedX;
     }
 
-    public static double getY() {return y;}
+    public static double getY() {return predictedY;}
 
     public static void reset()
     {

@@ -5,7 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 
@@ -44,7 +46,7 @@ public class HUBTEST extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         DcMotorEx motor;
-        Servo servo;
+        ServoImplEx servo;
         CRServo crServo;
 
         waitForStart();
@@ -60,7 +62,8 @@ public class HUBTEST extends LinearOpMode {
                     crServo.setPower(power);
                     break;
                 case SERVO:
-                    servo=hardwareMap.get(Servo.class, string);
+                    servo=hardwareMap.get(ServoImplEx.class, string);
+                    servo.setPwmRange(new PwmControl.PwmRange(505 , 2495) );
                     servo.setPosition(position);
                     break;
                 case MOTOR:

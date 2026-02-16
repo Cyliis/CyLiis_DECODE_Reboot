@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevSPARKMini;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Math.PIDController;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Wrappers.Odo;
@@ -31,24 +32,22 @@ public class MecanumDriveTrain {
     double rotation;
     public boolean usingTargetHeading=true;
 
-    public static boolean frontLeftreversed=true , frontRightreversed=false , backLeftreversed=true , backRightreversed=false;
-
-    public static double lateralMultiplier=2.5;
+    public static double lateralMultiplier=1.5;
     public static  double realHeading;
 
-    public static double kp=0.0095 , ki=0 , kd=0;
-    public static double KP=1.78 , KI , KD=0.16;
+    public static double kp=0.008 , ki=0 , kd=0;
+    public static double KP=0.9 , KI , KD=0.1;
     public PIDController controllerX=new PIDController(kp , ki , kd) , controllerY=new PIDController(kp , ki , kd) , controllerHeading=new PIDController(KP , KI , KD);
 
     public MecanumDriveTrain(State initialState)
     {
         state=initialState;
 
-        frontLeft= Hardware.mch2;
-        frontRight=Hardware.mch3;
+        frontLeft= Hardware.mch3;
+        frontRight=Hardware.mch1;
 
-        backLeft=Hardware.mch0;
-        backRight=Hardware.mch1;
+        backLeft=Hardware.mch2;
+        backRight=Hardware.mch0;
 
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -61,18 +60,7 @@ public class MecanumDriveTrain {
         //setTargetVector(0 , 0 , 0);
 
     }
-    public boolean inPosition()
-    {
-        double heading= Odo.getHeading();
-        if(heading<0)realHeading=Math.abs(heading);
-        else realHeading=2*Math.PI-heading;
 
-        error=targetHeading-realHeading;
-        if(Math.abs(error)>Math.PI)error=-Math.signum(error)*(2*Math.PI-Math.abs(error));
-
-        if(Math.abs(targetX-Odo.getX())<25 && Math.abs(targetY-Odo.getY())<25 && Math.abs(error)<0.1 && Math.abs(Odo.odo.getHeadingVelocity())<0.5)return true;
-        return false;
-    }
     public boolean inPosition( double x , double y , double Error)
     {
         double heading= Odo.getHeading();
@@ -82,7 +70,7 @@ public class MecanumDriveTrain {
         error=targetHeading-realHeading;
         if(Math.abs(error)>Math.PI)error=-Math.signum(error)*(2*Math.PI-Math.abs(error));
 
-        if(Math.abs(targetX-Odo.getX())<x && Math.abs(targetY-Odo.getY())<y && Math.abs(error)<Error)return true;
+        if(Math.abs(targetX-Odo.odo.getPosX(DistanceUnit.MM))<x && Math.abs(targetY-Odo.odo.getPosY(DistanceUnit.MM))<y && Math.abs(error)<Error)return true;
         return false;
     }
 
@@ -102,10 +90,12 @@ public class MecanumDriveTrain {
         backRight.setPower(backRightPower);
 
     }
+
     public void setMode(State state)
     {
         this.state=state;
     }
+
     public void setTargetPosition(double x , double y , double heading)
     {
         targetX=x;
@@ -130,7 +120,6 @@ public class MecanumDriveTrain {
         usingTargetHeading=true;
     }
 
-
     public void update()
     {
         if (state !=State.PID) {return;
@@ -152,7 +141,7 @@ public class MecanumDriveTrain {
         {
             return;
         }
-        x = controllerX.calculate(targetX, Odo.predictedX);
+        x =controllerX.calculate(targetX, Odo.predictedX);
 
         y=-controllerY.calculate(targetY , Odo.predictedY);
 
@@ -160,16 +149,12 @@ public class MecanumDriveTrain {
         if(heading<0)realHeading=Math.abs(heading);
         else realHeading=2*Math.PI-heading;
 
-        if(usingTargetHeading==true)
-        {error=targetHeading-realHeading;
-            if(Math.abs(error)>Math.PI)error=-Math.signum(error)*(2*Math.PI-Math.abs(error));
-            rotation= controllerHeading.calculate(error , 0);}
+        error=targetHeading-realHeading;
+        if(Math.abs(error)>Math.PI)error=-Math.signum(error)*(2*Math.PI-Math.abs(error));
+        rotation= controllerHeading.calculate(error , 0);
 
-
-        setTargetVector(y*Math.cos(-heading) - x*Math.sin(-heading) , y*Math.sin(-heading)+x*Math.cos(-heading) , rotation);
-
+        setTargetVector(y*Math.cos(-heading) - x*Math.sin(-heading), y*Math.sin(-heading)+x*Math.cos(-heading) , rotation);
 
     }
-
 
 }

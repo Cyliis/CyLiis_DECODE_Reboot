@@ -9,10 +9,10 @@ import org.firstinspires.ftc.teamcode.Robot.Hardware;
 @Config
 public class Latch {
 
-    public static double freePosition=0.13, transferPosition=0.385;
+    public static double freePosition=0.13, transferPosition=0.39;
     public static boolean reversed=false;
 
-    public static double maxVel=20, acc=9, dec=9;
+    public static double maxVel=10, acc=5, dec=5;
 
     BetterMotionProfile profile;
     Servo servo;
@@ -34,7 +34,7 @@ public class Latch {
             nextState=this;
         }
     }
-    State state;
+    public State state;
 
     public Latch(State initialState)
     {
@@ -52,13 +52,13 @@ public class Latch {
 
     public void setState(State state)
     {
-        if(state.nextState!=this.state)
-        this.state=state;
+        if(state.nextState != this.state)
+        this.state = state;
     }
 
     public boolean isMoving()
     {
-        return state==State.FREE || state==State.TRANSFER;
+        return state == State.FREE || state == State.TRANSFER;
     }
 
     private void updateHardware()

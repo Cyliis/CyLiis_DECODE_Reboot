@@ -9,6 +9,12 @@ public class Pose2D {
 
     Pose2D correction;
 
+    public Pose2D(double x, double y) {
+         this.x = x;
+         this.y = y;
+         this.heading = 0;
+    }
+
     public Pose2D(double x , double y , double heading)
     {
         this.x=x;
@@ -31,5 +37,13 @@ public class Pose2D {
         this.correction=correction;
     }
     public Pose2D(){}
+
+    public void rotate(double a) {
+        double newX = Math.cos(a) * x - Math.sin(a) * y;
+        double newY = Math.sin(a) * x + Math.cos(a) * y;
+
+        this.x = newX;
+        this.y = newY;
+    }
 
 }

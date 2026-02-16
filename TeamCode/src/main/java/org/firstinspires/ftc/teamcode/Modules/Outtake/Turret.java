@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.firstinspires.ftc.teamcode.Wrappers.Odo;
+import org.firstinspires.ftc.teamcode.Wrappers.Pose2D;
 import org.opencv.core.Mat;
 
 @Config
@@ -22,8 +23,10 @@ public class Turret {
 
     ServoImplEx servo1, servo2;
 
-    public static double redX=1700, redY=1700;
-    public static double blueX=1000, blueY=1000;
+    public static double redX=0, redY=-840;
+    public static double blueX=0, blueY=840;
+
+    public static double turretX = 17, turretY = 0;
 
     public static double zeroPosition=0.5;
 
@@ -51,6 +54,7 @@ public class Turret {
 
         servo1.setPwmRange(new PwmControl.PwmRange(505 , 2495) );
         servo2.setPwmRange(new PwmControl.PwmRange(505 , 2495) );
+
 
         if(Servo1REVERSED)servo1.setDirection(Servo.Direction.REVERSE);
         if(Servo2REVERSED)servo2.setDirection(Servo.Direction.REVERSE);
@@ -97,14 +101,9 @@ public class Turret {
 
             case Middle:
 
-                 angle = (Odo.getHeading() + Math.PI)%(Math.PI*2);
-                if(angle<0)angle+=2*Math.PI;
-                angle=angle-Math.PI;
 
-                angle= ( 360*angle/(Math.PI*2) )/355;
-
-                servo1.setPosition(zeroPosition + angle);
-                servo2.setPosition(zeroPosition + angle);
+                servo1.setPosition(zeroPosition);
+                servo2.setPosition(zeroPosition);
                 break;
         }
     }
@@ -114,6 +113,12 @@ public class Turret {
         double x = Odo.getX();
         double y = Odo.getY();
         double yaw = Odo.getHeading();
+
+        Pose2D offset = new Pose2D(turretX, turretY);
+        offset.rotate(yaw);
+
+        x += offset.x;
+        y += offset.y;
 
         targetAngle = Math.atan2( ( state.targetY-y ) , ( state.targetX-x )  );
     }

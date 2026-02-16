@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Calibration;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -16,6 +18,8 @@ public class SpindexerTest extends LinearOpMode {
 
         Hardware.init(hardwareMap);
         Sorter sorter=new Sorter(Sorter.State.Ball1);
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart();
 

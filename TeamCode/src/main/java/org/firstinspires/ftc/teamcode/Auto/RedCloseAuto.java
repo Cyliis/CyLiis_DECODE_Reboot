@@ -18,25 +18,25 @@ import org.firstinspires.ftc.teamcode.Wrappers.Odo;
 import org.firstinspires.ftc.teamcode.Wrappers.Pose2D;
 import org.opencv.core.Mat;
 
-public class BlueCloseAuto {
+public class RedCloseAuto {
 
-    public static Pose2D shootPosition = new Pose2D(-1450, -460, Math.PI/2);
+    public static Pose2D shootPosition = new Pose2D(-1450, 460, -Math.PI/2);
     public static Pose2D[] beforeTakeStack2Position = {
-                                                new Pose2D(-1910, -100, Math.PI/2) ,
-                                                new Pose2D(-2450, -100, Math.PI/2)
+            new Pose2D(-1910, 100, -Math.PI/2) ,
+            new Pose2D(-2450, 100, -Math.PI/2)
     };
 
     public static Pose2D[] takeStack2Position = {
-                                                new Pose2D(-1910, 760, Math.PI/2),
-                                                new Pose2D(-2450, 760, Math.PI/2)
+            new Pose2D(-1910, -760, -Math.PI/2),
+            new Pose2D(-2450, -760, -Math.PI/2)
     };
 
-    public static Pose2D beforeShootAfterCollectingPosition = new Pose2D(-1930, 600, Math.PI/2-0.3);
-    public static Pose2D beforeIntakeWhileOpenGatePosition = new Pose2D(-1790, 670, Math.PI/2);
-    public static Pose2D intakeWhileOpenGatePosition = new Pose2D(-1850, 715, Math.PI/2+0.55);
+    public static Pose2D beforeShootAfterCollectingPosition = new Pose2D(-1930, -600, -Math.PI/2+0.3);
+    public static Pose2D beforeIntakeWhileOpenGatePosition = new Pose2D(-1790, -660, -Math.PI/2);
+    public static Pose2D intakeWhileOpenGatePosition = new Pose2D(-1860, -710, -Math.PI/2-0.55);
 
-    public Pose2D beforeTakeStack1Position = new Pose2D(-1270 , -450 , Math.PI/2  );
-    public Pose2D takeStack1Position = new Pose2D(-1270 , 620 , Math.PI/2);
+    public Pose2D beforeTakeStack1Position = new Pose2D(-1270 , 450 , -Math.PI/2  );
+    public Pose2D takeStack1Position = new Pose2D(-1270 , -620 , -Math.PI/2);
 
     Node beforeShootAfterCollecting, shoot,  beforeTakeStack2 ,takeStack2, beforeTakeStack1, takeStack1, beforeIntakeWhileOpenGate, intakeWhileOpenGate, openGate;
     public Node currentNode;
@@ -55,7 +55,7 @@ public class BlueCloseAuto {
         intake = new Intake();
         intake.setState(Intake.State.READY_FOR_TRANSFER);
         Sorter.state=Sorter.State.GoingReadyForTransfer;
-        outtake = new Outtake(Turret.State.BLUE);
+        outtake = new Outtake(Turret.State.RED);
 
         beforeShootAfterCollecting = new Node("beforeShootAfterCollecting");
         shoot = new Node("shoot");
@@ -126,7 +126,7 @@ public class BlueCloseAuto {
                     driveTrain.setTargetPosition(beforeShootAfterCollectingPosition);
                     outtake.setState(Outtake.State.SHOOT);
                     if(Sorter.state==Sorter.State.ReadyForTransfer)
-                    intake.setState(Intake.State.REVERSE);
+                        intake.setState(Intake.State.REVERSE);
                 }
                 ,
                 ()->{

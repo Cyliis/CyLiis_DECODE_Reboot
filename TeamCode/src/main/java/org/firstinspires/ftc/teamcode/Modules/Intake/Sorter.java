@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Math.PIDController;
 import org.firstinspires.ftc.teamcode.Math._33VtoRadians;
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Pitch;
+import org.firstinspires.ftc.teamcode.OpModes.TeleOp_Blue;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 import org.opencv.core.Mat;
 
@@ -38,10 +40,9 @@ public class Sorter {
     }
     public Ball ball1 = Ball.NOTHING, ball2 = Ball.NOTHING, ball3 = Ball.NOTHING;
 
-
     public boolean sort=false;
 
-    public static double ball1Position=0,ball2Position= 2*Math.PI/3, ball3Position= 4*Math.PI/3, readyTransferPosition=Math.PI-0.2 , shootingPosition=Math.PI-0.2 , sortingInitialPosition;
+    public static double ball1Position=0,ball2Position= 2*Math.PI/3, ball3Position= 4*Math.PI/3, readyTransferPosition=Math.PI-0.26 , shootingPosition=Math.PI-0.26 , sortingInitialPosition;
     public static double angle, zeroAngle=0.3;
     public static double error=0;
 
@@ -51,7 +52,7 @@ public class Sorter {
 
     ElapsedTime timer;
 
-    public static double KP=0.82, KI, KD=0.023;
+    public static double KP=0.6, KI=0 , KD=0.01;
     public static double KP_SPECIAL, KI_SPECIAL, KD_SPECIAL;
     PIDController controller = new PIDController(KP, KI, KD);
 
@@ -82,6 +83,7 @@ public class Sorter {
     public Sorter(State initialState)
     {
         timer=new ElapsedTime();
+        timer.startTime();
         motor = Hardware.sch2;
         encoder = Hardware.analogInput;
         bb=Hardware.bb;
@@ -110,7 +112,7 @@ public class Sorter {
 
     public boolean isMoving()
     {
-        return Math.abs(error)>0.20;
+        return Math.abs(error)>0.25;
     }
 
     private void updateHardware()
@@ -118,15 +120,15 @@ public class Sorter {
 
         if(state==State.FastShooting)
         {
-            motor.setPower(-1);
+            motor.setPower(-0.8);
             return;
         }
 
         { error =  state.position - angle;
         if(java.lang.Math.abs(error)> java.lang.Math.PI )error = -java.lang.Math.signum (error) * ( 2 * java.lang.Math.PI - java.lang.Math.abs(error));
 
-         double power=controller.calculate( error, 0 );
-         motor.setPower(power);}
+         double power=controller.calculate( 0 , -error );
+         motor.setPower(power+0.06*Math.signum(power));}
     }
 
     private void updatePID()
@@ -157,8 +159,8 @@ public class Sorter {
                 if(Math.abs(angle-state.position)<0.25)state=state.nextState;
             break;
             case FastShooting:
-                if(timer.seconds()>6)timer.reset();
-                if(timer.seconds()>0.5)state=state.nextState;
+                if(timer.seconds()>2)timer.reset();
+                if(timer.seconds()>1)state=state.nextState;
                 break;
             case Ball1:
             case Ball2:
@@ -185,6 +187,9 @@ public class Sorter {
     public void update()
     {
         State.ReadyForTransfer.position=readyTransferPosition;
+
+//        State.Ball1.position = ball1Position;
+
         updatePID();
         updateReadyTransferPosition();
         updateAngle();

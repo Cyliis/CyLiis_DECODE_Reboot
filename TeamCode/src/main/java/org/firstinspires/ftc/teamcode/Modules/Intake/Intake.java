@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Modules.Intake;
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.firstinspires.ftc.teamcode.Modules.Outtake.Pitch;
 import org.firstinspires.ftc.teamcode.Robot.Hardware;
 
 public class Intake {
@@ -13,7 +14,7 @@ public class Intake {
 
     DigitalChannel bb;
     ActiveIntake intake;
-    Latch latch;
+    public Latch latch;
     public Sorter sorter;
     UpgradedColorSensor colorSensor;
 
@@ -35,6 +36,8 @@ public class Intake {
     {
         switch (state)
         {
+            case READY_FOR_TRANSFER:
+                break;
             case PAUSE:
                 intake.setState(ActiveIntake.State.PAUSE);
                 break;
@@ -87,6 +90,7 @@ public class Intake {
                 if(Sorter.state== Sorter.State.BeforeReset && !sorter.isMoving())latch.setState(Latch.State.GOING_FREE);
                 if(latch.state== Latch.State.FREE){state=State.PAUSE;Sorter.state= Sorter.State.GoingBall1;}
                 break;
+
 
         }
     }

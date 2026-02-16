@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.OpModes.Calibration;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,6 +19,8 @@ public class ShooterCalibration extends LinearOpMode {
         Shooter shooter = new Shooter();
         Pitch pitch = new Pitch();
         waitForStart();
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         while(opModeIsActive())
         {
